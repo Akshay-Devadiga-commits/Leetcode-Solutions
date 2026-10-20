@@ -1,74 +1,50 @@
 #include <vector>
+#include <numeric>
+#include <algorithm>
+#include <string>
 
 class Solution {
 public:
     int sortableIntegers(std::vector<int>& nums) {
         int n = nums.size();
-        int total_sum = 0;
+        std::vector<int> target = nums;
+        std::sort(target.begin(), target.end());
 
-        auto is_sorted_rotation = [](const std::vector<int>& sub) {
-            int m = sub.size();
-            if (m <= 1) return true;
-            int drops = 0;
-            for (int i = 0; i < m; ++i) {
-                if (sub[i] > sub[(i + 1) % m]) {
-                    drops++;
-                }
+        auto is_cyclic_shift = [&](const std::vector<int>& sub, const std::vector<int>& orig) {
+            if (sub.size() != orig.size()) {
+                return false;
             }
-            return drops <= 1;
+            std::vector<int> double_orig = orig;
+            double_orig.insert(double_orig.end(), orig.begin(), orig.end());
+            
+            std::string sub_str;
+            for(int x : sub) sub_str += std::to_string(x) + ",";
+            if (!sub_str.empty()) sub_str.pop_back();
+
+            std::string double_orig_str;
+            for(int x : double_orig) double_orig_str += std::to_string(x) + ",";
+            if (!double_orig_str.empty()) double_orig_str.pop_back();
+
+            return double_orig_str.find(sub_str) != std::string::npos;
         };
 
+        int ans = 0;
         for (int k = 1; k <= n; ++k) {
-            if (n % k != 0) continue;
-
-            bool valid = true;
-            std::vector<std::vector<int>> sorted_subarrays;
-
-            for (int i = 0; i < n; i += k) {
-                std::vector<int> sub(nums.begin() + i, nums.begin() + i + k);
-                if (!is_sorted_rotation(sub)) {
-                    valid = false;
-                    break;
-                }
-
-                int m = sub.size();
-                int start_idx = 0;
-                for (int j = 0; j < m; ++j) {
-                    if (sub[j] > sub[(j + 1) % m]) {
-                        start_idx = (j + 1) % m;
+            if (n % k == 0) {
+                bool possible = true;
+                for (int i = 0; i < n; i += k) {
+                    std::vector<int> sub(nums.begin() + i, nums.begin() + i + k);
+                    std::vector<int> orig(target.begin() + i, target.begin() + i + k);
+                    if (!is_cyclic_shift(sub, orig)) {
+                        possible = false;
                         break;
                     }
                 }
-
-                std::vector<int> rotated;
-                rotated.reserve(m);
-                for (int j = 0; j < m; ++j) {
-                    rotated.push_back(sub[(start_idx + j) % m]);
+                if (possible) {
+                    ans += k;
                 }
-                sorted_subarrays.push_back(rotated);
-            }
-
-            if (!valid) continue;
-
-            std::vector<int> flat;
-            flat.reserve(n);
-            for (const auto& sub : sorted_subarrays) {
-                flat.insert(flat.end(), sub.begin(), sub.end());
-            }
-
-            bool is_non_decreasing = true;
-            for (int i = 0; i < n - 1; ++i) {
-                if (flat[i] > flat[i + 1]) {
-                    is_non_decreasing = false;
-                    break;
-                }
-            }
-
-            if (is_non_decreasing) {
-                total_sum += k;
             }
         }
-
-        return total_sum;
+        return ans;
     }
 };
