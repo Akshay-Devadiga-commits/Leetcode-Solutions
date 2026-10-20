@@ -2,6 +2,10 @@
 
 ![Difficulty](https://img.shields.io/badge/Difficulty-Hard-blue?style=flat-square)
 
+### 📺 Video Walkthrough & Visual Execution
+Watch the complete step-by-step visual explanation and algorithmic intuition on YouTube:
+👉 **[Watch on YouTube](https://www.youtube.com/watch?v=SRjLq07ObBM)**
+
 ## 💻 Solutions in 5 Major Languages
 
 | Language | Solution File |
@@ -60,11 +64,11 @@ Return an integer denoting the sum of all possible sortable integers
 k
 .
 
-## 💡 Approach: Divisor Check with Subarray Rotation Simulation
+## 💡 Approach: Divisor Check and Subarray Rotation Validation
 
-Given the constraints where n <= 10, we can directly test all divisors k of n. For each valid divisor k, we partition the array into consecutive subarrays of length k. For a subarray to be sortable into a non-decreasing sequence through cyclic rotations, it must be possible to cyclically shift it such that it forms a contiguous non-decreasing sequence. Furthermore, when we concatenate all these sorted subarrays from left to right, the entire array must end up in non-decreasing order (meaning the maximum of the i-th subarray is less than or equal to the minimum of the (i+1)-th subarray). We simulate this condition for each divisor k that divides n, and sum up the valid k values.
+To solve this problem, we first find all divisors k of n (the length of the array). For each divisor k, we partition the array nums into n/k consecutive subarrays of length k. Since we can cyclically rotate each subarray independently, a subarray of length k can achieve a sorted state if and only if its elements can form a contiguous sorted sequence when rotated. More simply, each subarray when rotated must become non-decreasing. Furthermore, the maximum element of the i-th subarray must be less than or equal to the minimum element of the (i+1)-th subarray so that the whole array ends up sorted globally. We iterate through all divisors k, check if these conditions hold for all subarrays, and sum up all valid k values.
 
 ## ⏱️ Complexity
 
-- **Time Complexity:** `O(n * d(n)) where n is the length of the array and d(n) is the number of divisors of n. Given n <= 10, this is extremely fast and well within time limits.`
-- **Space Complexity:** `O(n) to store subarrays and flattened arrays for each divisor.`
+- **Time Complexity:** `O(n * sigma(n)) where sigma(n) is the sum of divisors of n, which is very small for n <= 10.`
+- **Space Complexity:** `O(n)`
