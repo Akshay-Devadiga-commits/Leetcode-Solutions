@@ -2,38 +2,49 @@ class Solution:
     def sortableIntegers(self, nums: list[int]) -> int:
         n = len(nums)
         
-        def can_sort_with_k(k):
-            subarrays = []
-            for i in range(0, n, k):
-                sub = nums[i:i+k]
-                drops = 0
-                for j in range(k):
-                    if sub[j] > sub[(j + 1) % k]:
-                        drops += 1
-                if drops > 1:
-                    return False
-                
-                if drops == 1:
-                    split = 0
-                    for j in range(k):
-                        if sub[j] > sub[(j + 1) % k]:
-                            split = j + 1
-                            break
-                    rotated_sub = sub[split:] + sub[:split]
-                else:
-                    rotated_sub = sub
-                subarrays.append(rotated_sub)
-            
-            for i in range(len(subarrays) - 1):
-                if subarrays[i][-1] > subarrays[i+1][0]:
-                    return False
-            
-            return True
+        def is_sorted_rotation(sub):
+            m = len(sub)
+            if m <= 1:
+                return True
+            drops = 0
+            for i in range(m):
+                if sub[i] > sub[(i + 1) % m]:
+                    drops += 1
+            return drops <= 1
 
         total_sum = 0
         for k in range(1, n + 1):
-            if n % k == 0:
-                if can_sort_with_k(k):
-                    total_sum += k
-                    
+            if n % k != 0:
+                continue
+            
+            subarrays = [nums[i:i + k] for i in range(0, n, k)]
+            
+            valid = True
+            for sub in subarrays:
+                if not is_sorted_rotation(sub):
+                    valid = False
+                    break
+            
+            if not valid:
+                continue
+                
+            sorted_subarrays = []
+            for sub in subarrays:
+                m = len(sub)
+                start_idx = 0
+                for i in range(m):
+                    if sub[i] > sub[(i + 1) % m]:
+                        start_idx = (i + 1) % m
+                        break
+                rotated = sub[start_idx:] + sub[:start_idx]
+                sorted_subarrays.append(rotated)
+            
+            flat = []
+            for sub in sorted_subarrays:
+                flat.extend(sub)
+                
+            is_non_decreasing = all(flat[i] <= flat[i+1] for i in range(n - 1))
+            if is_non_decreasing:
+                total_sum += k
+                
         return total_sum
