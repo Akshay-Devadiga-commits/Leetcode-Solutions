@@ -4,7 +4,7 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 Watch the complete step-by-step visual explanation and algorithmic intuition on YouTube:
-👉 **[Watch on YouTube](https://www.youtube.com/watch?v=v78CWGaatuM)**
+👉 **[Watch on YouTube](https://www.youtube.com/watch?v=EV45m2VoD84)**
 
 ## 💻 Solutions in 5 Major Languages
 
@@ -64,11 +64,11 @@ Return an integer denoting the sum of all possible sortable integers
 k
 .
 
-## 💡 Approach: Divisor Check and Subarray Rotation Validation
+## 💡 Approach: Divisor Check with Subarray Rotation Matching
 
-To determine if an integer k is sortable, we first check if k divides n. If it does, we partition nums into n / k subarrays of length k. Each subarray can be independently rotated. For the entire array to be sortable into non-decreasing order: 1) The concatenation of the minimum elements of each subarray in their given order must be sorted. 2) Each subarray itself must be a valid cyclic rotation of a sorted sequence. 3) The maximum element of the i-th subarray must be less than or equal to the minimum element of the (i+1)-th subarray. We check all divisors k of n and sum them up if they meet all conditions.
+For a given divisor k of n, we can partition nums into n/k subarrays of length k. Each subarray can be independently rotated cyclically. For the entire array to be sortable, each subarray must be formed by a contiguous chunk of the final sorted array, and its elements must be a cyclic shift of that chunk. Furthermore, the relative order of the sorted chunks must be preserved. We can verify this by sorting the entire array to get the target state, dividing it into chunks of length k, and checking if each chunk in nums is a cyclic shift of the corresponding target chunk. Since n is very small (up to 10 based on constraints), we can iterate over all divisors k of n, and for each divisor, perform the verification efficiently.
 
 ## ⏱️ Complexity
 
-- **Time Complexity:** `O(n^2)`
+- **Time Complexity:** `O(n^2 log n)`
 - **Space Complexity:** `O(n)`
