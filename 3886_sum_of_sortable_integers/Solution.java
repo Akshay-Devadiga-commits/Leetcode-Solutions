@@ -1,68 +1,41 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Solution {
-    public int sortableIntegers(List<int[]> numsList) { return 0; }
     public int sortableIntegers(int[] nums) {
         int n = nums.length;
         int totalSum = 0;
-        List<Integer> divisors = new ArrayList<>();
-        for (int i = 1; i <= n; i++) {
-            if (n % i == 0) divisors.add(i);
-        }
-
-        for (int k : divisors) {
-            boolean possible = true;
-            List<int[]> subarrays = new ArrayList<>();
-            for (int i = 0; i < n; i += k) {
-                int[] sub = new int[k];
-                System.arraycopy(nums, i, sub, 0, k);
-                int drops = 0;
-                for (int j = 0; j < k; j++) {
-                    if (sub[j] > sub[(j + 1) % k]) {
-                        drops++;
-                    }
+        
+        for (int k = 1; k <= n; k++) {
+            if (n % k == 0) {
+                if (canSortWithK(nums, k)) {
+                    totalSum += k;
                 }
-                if (drops > 1) {
-                    possible = false;
-                    break;
-                }
-                int[] sortedSub;
-                if (drops == 1) {
-                    int startIdx = 0;
-                    for (int j = 0; j < k; j++) {
-                        if (sub[j] > sub[(j + 1) % k]) {
-                            startIdx = (j + 1) % k;
-                            break;
-                        }
-                    }
-                    sortedSub = new int[k];
-                    for (int j = 0; j < k; j++) {
-                        sortedSub[j] = sub[(startIdx + j) % k];
-                    }
-                } else {
-                    sortedSub = sub;
-                }
-                subarrays.add(sortedSub);
-            }
-            if (!possible) continue;
-            int[] flatArray = new int[n];
-            int idx = 0;
-            for (int[] sub : subarrays) {
-                for (int val : sub) {
-                    flatArray[idx++] = val;
-                }
-            }
-            for (int i = 0; i < n - 1; i++) {
-                if (flatArray[i] > flatArray[i + 1]) {
-                    possible = false;
-                    break;
-                }
-            }
-            if (possible) {
-                totalSum += k;
             }
         }
         return totalSum;
+    }
+    
+    private boolean canSortWithK(int[] nums, int k) {
+        int n = nums.length;
+        int prevMax = -1;
+        
+        for (int i = 0; i < n; i += k) {
+            int drops = 0;
+            int split = 0;
+            for (int j = 0; j < k; j++) {
+                if (nums[i + j] > nums[i + (j + 1) % k]) {
+                    drops++;
+                    split = j + 1;
+                }
+            }
+            if (drops > 1) return false;
+            
+            int minVal = nums[i + split];
+            int maxVal = nums[i + (split - 1 + k) % k];
+            
+            if (prevMax != -1 && prevMax > minVal) {
+                return false;
+            }
+            prevMax = maxVal;
+        }
+        return true;
     }
 }
