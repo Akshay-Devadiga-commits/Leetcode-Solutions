@@ -4,7 +4,7 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 Watch the complete step-by-step visual explanation and algorithmic intuition on YouTube:
-👉 **[Watch on YouTube](https://www.youtube.com/watch?v=SRjLq07ObBM)**
+👉 **[Watch on YouTube](https://www.youtube.com/watch?v=v78CWGaatuM)**
 
 ## 💻 Solutions in 5 Major Languages
 
@@ -66,9 +66,9 @@ k
 
 ## 💡 Approach: Divisor Check and Subarray Rotation Validation
 
-To solve this problem, we first find all divisors k of n (the length of the array). For each divisor k, we partition the array nums into n/k consecutive subarrays of length k. Since we can cyclically rotate each subarray independently, a subarray of length k can achieve a sorted state if and only if its elements can form a contiguous sorted sequence when rotated. More simply, each subarray when rotated must become non-decreasing. Furthermore, the maximum element of the i-th subarray must be less than or equal to the minimum element of the (i+1)-th subarray so that the whole array ends up sorted globally. We iterate through all divisors k, check if these conditions hold for all subarrays, and sum up all valid k values.
+To determine if an integer k is sortable, we first check if k divides n. If it does, we partition nums into n / k subarrays of length k. Each subarray can be independently rotated. For the entire array to be sortable into non-decreasing order: 1) The concatenation of the minimum elements of each subarray in their given order must be sorted. 2) Each subarray itself must be a valid cyclic rotation of a sorted sequence. 3) The maximum element of the i-th subarray must be less than or equal to the minimum element of the (i+1)-th subarray. We check all divisors k of n and sum them up if they meet all conditions.
 
 ## ⏱️ Complexity
 
-- **Time Complexity:** `O(n * sigma(n)) where sigma(n) is the sum of divisors of n, which is very small for n <= 10.`
+- **Time Complexity:** `O(n^2)`
 - **Space Complexity:** `O(n)`
