@@ -1,76 +1,48 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 class Solution {
     public int sortableIntegers(int[] nums) {
         int n = nums.length;
-        int totalSupply = 0;
+        int[] target = Arrays.copyOf(nums, n);
+        Arrays.sort(target);
 
+        boolean isCyclicShift(List<Integer> sub, List<Integer> orig) {
+            if (sub.size() != orig.size()) {
+                return false;
+            }
+            List<Integer> doubleOrig = new ArrayList<>(orig);
+            doubleOrig.addAll(orig);
+            
+            String subStr = sub.toString().replace(" ", "");
+            String doubleOrigStr = doubleOrig.toString().replace(" ", "");
+            
+            return doubleOrigStr.substring(1, doubleOrigStr.length() - 1).contains(subStr.substring(1, subStr.length() - 1));
+        }
+
+        int ans = 0;
         for (int k = 1; k <= n; k++) {
-            if (n % k != 0) continue;
+            if (n % k == 0) {
+                boolean possible = true;
+                for (int i = 0; i < n; i += k) {
+                    List<Integer> sub = new ArrayList<>();
+                    for(int j=0; j<k; j++) sub.add(nums[i+j]);
+                    
+                    List<Integer> orig = new ArrayList<>();
+                    for(int j=0; j<k; j++) orig.add(target[i+j]);
 
-            boolean valid = true;
-            List<int[]> sortedSubarrays = new ArrayList<>();
-
-            for (int i = 0; i < n; i += k) {
-                int[] sub = new int[k];
-                System.arraycopy(nums, i, sub, 0, k);
-
-                if (!isSortedRotation(sub)) {
-                    valid = false;
-                    break;
-                }
-
-                int m = sub.length;
-                int startIdx = 0;
-                for (int j = 0; j < m; j++) {
-                    if (sub[j] > sub[(j + 1) % m]) {
-                        startIdx = (j + 1) % m;
+                    if (!isCyclicShift(sub, orig)) {
+                        possible = false;
                         break;
                     }
                 }
-
-                int[] rotated = new int[m];
-                for (int j = 0; j < m; j++) {
-                    rotated[j] = sub[(startIdx + j) % m];
+                if (possible) {
+                    ans += k;
                 }
-                sortedSubarrays.add(rotated);
-            }
-
-            if (!valid) continue;
-
-            int[] flat = new int[n];
-            int idx = 0;
-            for (int[] sub : sortedSubarrays) {
-                for (int val : sub) {
-                    flat[idx++] = val;
-                }
-            }
-
-            boolean isNonDecreasing = true;
-            for (int i = 0; i < n - 1; i++) {
-                if (flat[i] > flat[i + 1]) {
-                    isNonDecreasing = false;
-                    break;
-                }
-            }
-
-            if (isNonDecreasing) {
-                totalSupply += k;
             }
         }
-
-        return totalSupply;
-    }
-
-    private boolean isSortedRotation(int[] sub) {
-        int m = sub.length;
-        if (m <= 1) return true;
-        int drops = 0;
-        for (int i = 0; i < m; i++) {
-            if (sub[i] > sub[(i + 1) % m]) {
-                drops++;
-            }
-        }
-        return drops <= 1;
+        return ans;
     }
 }
