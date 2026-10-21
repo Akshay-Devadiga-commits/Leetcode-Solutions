@@ -2,53 +2,51 @@ import java.util.*;
 
 class Solution {
     public int minOperations(String s) {
-        char[] sortedChars = s.toCharArray();
-        Arrays.sort(sortedChars);
-        String target = new String(sortedChars);
-        if (s.equals(target)) return 0;
-
+        if (isSorted(s)) return 0;
+        
         int n = s.length();
-        Queue<Pair> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
-
-        queue.offer(new Pair(s, 0));
+        Queue<Pair> queue = new LinkedList<>();
+        
         visited.add(s);
-
+        queue.offer(new Pair(s, 0));
+        
         while (!queue.isEmpty()) {
-            Pair currPair = queue.poll();
-            String curr = currPair.s;
-            int ops = currPair.ops;
-
+            Pair curr = queue.poll();
+            
             for (int i = 0; i < n; i++) {
-                for (int j = i + 2; j <= n; j++) {
+                for (int j = i + 1; j <= n; j++) {
                     if (i == 0 && j == n) continue;
-
-                    char[] sub = curr.substring(i, j).toCharArray();
+                    
+                    char[] sub = curr.str.substring(i, j).toCharArray();
                     Arrays.sort(sub);
-                    String nextS = curr.substring(0, i) + new String(sub) + curr.substring(j);
-
-                    char[] nextSorted = nextS.toCharArray();
-                    Arrays.sort(nextSorted);
-                    if (nextS.equals(new String(nextSorted))) {
-                        return ops + 1;
-                    }
-
-                    if (!visited.contains(nextS)) {
-                        visited.add(nextS);
-                        queue.offer(new Pair(nextS, ops + 1));
+                    String nextStr = curr.str.substring(0, i) + new String(sub) + curr.str.substring(j);
+                    
+                    if (isSorted(nextStr)) return curr.ops + 1;
+                    
+                    if (!visited.contains(nextStr)) {
+                        visited.add(nextStr);
+                        queue.offer(new Pair(nextStr, curr.ops + 1));
                     }
                 }
             }
         }
-
+        
         return -1;
     }
-
+    
+    private boolean isSorted(String s) {
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) < s.charAt(i - 1)) return false;
+        }
+        return true;
+    }
+    
     private static class Pair {
-        String s;
+        String str;
         int ops;
-        Pair(String s, int ops) {
-            this.s = s;
+        Pair(String str, int ops) {
+            this.str = str;
             this.ops = ops;
         }
     }
