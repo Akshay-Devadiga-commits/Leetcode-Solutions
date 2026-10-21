@@ -2,56 +2,59 @@ import (
     "sort"
 )
 
-type Item struct {
-    s   string
+type Node struct {
+    str string
     ops int
 }
 
 func minOperations(s string) int {
-    runes := []rune(s)
-    sort.Slice(runes, func(i, j int) bool { return runes[i] < runes[j] })
-    target := string(runes)
-    if s == target {
+    isSorted := func(str string) bool {
+        for i := 1; i < len(str); i++ {
+            if str[i] < str[i-1] {
+                return false
+            }
+        }
+        return true
+    }
+
+    if isSorted(s) {
         return 0
     }
 
     n := len(s)
-    queue := []Item{{s, 0}}
-    visited := map[string]bool{s: true}
-
+    visited := make(map[string]bool)
+    visited[s] = true
+    
+    queue := []Node{{s, 0}}
+    
     for len(queue) > 0 {
         curr := queue[0]
         queue = queue[1:]
-
-        currRunes := []rune(curr.s)
+        
         for i := 0; i < n; i++ {
-            for j := i + 2; j <= n; j++ {
+            for j := i + 1; j <= n; j++ {
                 if i == 0 && j == n {
                     continue
                 }
-
-                sub := make([]rune, j-i)
-                copy(sub, currRunes[i:j])
-                sort.Slice(sub, func(x, y int) bool { return sub[x] < sub[y] })
-
-                nextRunes := append([]rune{}, currRunes[:i]...)
-                nextRunes = append(nextRunes, sub...)
-                nextRunes = append(nextRunes, currRunes[j:]...)
-                nextS := string(nextRunes)
-
-                nextSortedRunes := append([]rune{}, nextRunes...)
-                sort.Slice(nextSortedRunes, func(x, y int) bool { return nextSortedRunes[x] < nextSortedRunes[y] })
-                if nextS == string(nextSortedRunes) {
+                
+                subBytes := []byte(curr.str[i:j])
+                sort.Slice(subBytes, func(a, b int) bool {
+                    return subBytes[a] < subBytes[b]
+                })
+                
+                nextStr := curr.str[:i] + string(subBytes) + curr.str[j:]
+                
+                if isSorted(nextStr) {
                     return curr.ops + 1
                 }
-
-                if !visited[nextS] {
-                    visited[nextS] = true
-                    queue = append(queue, Item{nextS, curr.ops + 1})
+                
+                if !visited[nextStr] {
+                    visited[nextStr] = true
+                    queue = append(queue, Node{nextStr, curr.ops + 1})
                 }
             }
         }
     }
-
+    
     return -1
 }
