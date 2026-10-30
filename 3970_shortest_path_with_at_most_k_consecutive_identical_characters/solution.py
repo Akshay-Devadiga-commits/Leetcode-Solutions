@@ -7,32 +7,34 @@ class Solution:
         for u, v, w in edges:
             adj[u].append((v, w))
             
-        pq = [(0, 0, labels[0], 1)]
-        dist = {}
+        init_char = labels[0]
+        if 1 > k:
+            return -1
+            
+        pq = [(0, 0, init_char, 1)]
+        dist = {(0, init_char, 1): 0}
         
         while pq:
-            w, u, last_char, count = heapq.heappop(pq)
+            d, u, last_char, count = heapq.heappop(pq)
             
             if u == n - 1:
-                return w
+                return d
                 
-            state = (u, last_char, count)
-            if state in dist and dist[state] < w:
+            if d > dist.get((u, last_char, count), float('inf')):
                 continue
-            dist[state] = w
-            
+                
             for v, weight in adj[u]:
-                nxt_char = labels[v]
-                if nxt_char == last_char:
-                    nxt_count = count + 1
+                v_char = labels[v]
+                if v_char == last_char:
+                    new_count = count + 1
                 else:
-                    nxt_count = 1
+                    new_count = 1
                     
-                if nxt_count <= k:
-                    nxt_state = (v, nxt_char, nxt_count)
-                    nxt_w = w + weight
-                    if nxt_state not in dist or nxt_w < dist[nxt_state]:
-                        dist[nxt_state] = nxt_w
-                        heapq.heappush(pq, (nxt_w, v, nxt_char, nxt_count))
+                if new_count <= k:
+                    new_dist = d + weight
+                    state = (v, v_char, new_count)
+                    if new_dist < dist.get(state, float('inf')):
+                        dist[state] = new_dist
+                        heapq.heappush(pq, (new_dist, v, v_char, new_count))
                         
         return -1
