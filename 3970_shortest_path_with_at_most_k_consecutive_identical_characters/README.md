@@ -4,7 +4,11 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 
-[![Video Walkthrough & Visual Execution](thumbnail.png)](https://github.com/Akshay-Devadiga-commits/Leetcode-Solutions)
+[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=OufLfaqKs3o)
+
+👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=OufLfaqKs3o)**
+
+📂 **YouTube Playlist:** [Medium LeetCode Problems Playlist](https://www.youtube.com/playlist?list=PLDwpLRpPSYZI)
 
 ## 💻 Solutions in 5 Major Languages
 
@@ -75,11 +79,11 @@ consecutive
 identical
  characters. If no valid path exists, return -1.
 
-## 💡 Approach: Dijkstra with State Expansion
+## 💡 Approach: Dijkstra with Extended State
 
-To solve this problem, we can use Dijkstra's algorithm. However, the standard graph state is just the current node. Since the problem imposes a constraint on the number of consecutive identical characters, we must augment the state to include the last visited character and its current run-length count. Therefore, each state in our priority queue will be represented as a tuple: (current_weight, current_node, last_character, run_length). As we traverse edges, we update the last character and run-length. If the new character is the same as the last character, we increment the run-length (which must not exceed k). If it is different, the run-length resets to 1. Because all edge weights are positive, Dijkstra's algorithm guarantees the shortest path once we reach node n - 1.
+To solve this problem, we can use Dijkstra's algorithm. Since the validity of a path depends not only on the current node but also on the last character visited and how many times it has appeared consecutively, we must include these attributes in our state. Thus, the state in our priority queue will be (current_distance, current_node, last_char, count). We can then run Dijkstra's algorithm to find the minimum distance to node n-1 with any valid last_char and count.
 
 ## ⏱️ Complexity
 
-- **Time Complexity:** `O((E * K) log(V * K))`
-- **Space Complexity:** `O(V * K)`
+- **Time Complexity:** `O(E * k * log(V * k))`
+- **Space Complexity:** `O(V * k)`
