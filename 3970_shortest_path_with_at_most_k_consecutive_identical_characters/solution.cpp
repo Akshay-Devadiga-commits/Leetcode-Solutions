@@ -3,6 +3,7 @@
 #include <queue>
 #include <tuple>
 #include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -14,36 +15,37 @@ public:
             adj[edge[0]].push_back({edge[1], edge[2]});
         }
 
-        using State = tuple<long long, int, char, int>;
-        priority_queue<State, vector<State>, greater<State>> pq;
-        pq.push({0, 0, labels[0], 1});
+        char init_char = labels[0];
+        if (1 > k) return -1;
 
-        map<tuple<int, char, int>, long long> dist;
+        using State = tuple<int, int, char, int>;
+        priority_queue<State, vector<State>, greater<State>> pq;
+        pq.push({0, 0, init_char, 1});
+
+        map<tuple<int, char, int>, int> dist;
+        dist[{0, init_char, 1}] = 0;
 
         while (!pq.empty()) {
-            auto [w, u, last_char, count] = pq.top();
+            auto [d, u, last_char, count] = pq.top();
             pq.pop();
 
-            if (u == n - 1) {
-                return w;
-            }
+            if (u == n - 1) return d;
 
-            auto state = make_tuple(u, last_char, count);
-            if (dist.count(state) && dist[state] < w) {
-                continue;
-            }
-            dist[state] = w;
+            auto state_key = make_tuple(u, last_char, count);
+            if (dist.count(state_key) && d > dist[state_key]) continue;
 
-            for (const auto& [v, weight] : adj[u]) {
-                char nxt_char = labels[v];
-                int nxt_count = (nxt_char == last_char) ? count + 1 : 1;
+            for (const auto& neighbor : adj[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+                char v_char = labels[v];
+                int new_count = (v_char == last_char) ? count + 1 : 1;
 
-                if (nxt_count <= k) {
-                    long long nxt_w = w + weight;
-                    auto nxt_state = make_tuple(v, nxt_char, nxt_count);
-                    if (!dist.count(nxt_state) || nxt_w < dist[nxt_state]) {
-                        dist[nxt_state] = nxt_w;
-                        pq.push({nxt_w, v, nxt_char, nxt_count});
+                if (new_count <= k) {
+                    int new_dist = d + weight;
+                    auto next_state = make_tuple(v, v_char, new_count);
+                    if (!dist.count(next_state) || new_dist < dist[next_state]) {
+                        dist[next_state] = new_dist;
+                        pq.push({new_dist, v, v_char, new_count});
                     }
                 }
             }
