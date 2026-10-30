@@ -7,34 +7,34 @@ class Solution {
             adj[u].push([v, w]);
         }
 
-        const pq = new MinPriorityQueue({ priority: x => x[0] });
-        pq.enqueue([0, 0, labels[0], 1]);
+        const initChar = labels.charCodeAt(0);
+        if (1 > k) return -1;
+
+        const pq = new MinPriorityQueue(x => x[0]);
+        pq.enqueue([0, 0, initChar, 1]);
 
         const dist = new Map();
+        const getStateKey = (u, c, count) => `${u},${c},${count}`;
+        dist.set(getStateKey(0, initChar, 1), 0);
 
         while (!pq.isEmpty()) {
-            const [w, u, lastChar, count] = pq.dequeue().element;
+            const [d, u, lastChar, count] = pq.dequeue();
 
-            if (u === n - 1) {
-                return w;
-            }
+            if (u === n - 1) return d;
 
-            const stateKey = `${u},${lastChar},${count}`;
-            if (dist.has(stateKey) && dist.get(stateKey) < w) {
-                continue;
-            }
-            dist.set(stateKey, w);
+            const key = getStateKey(u, lastChar, count);
+            if (d > (dist.get(key) ?? Infinity)) continue;
 
             for (const [v, weight] of adj[u]) {
-                const nxtChar = labels[v];
-                const nxtCount = (nxtChar === lastChar) ? count + 1 : 1;
+                const vChar = labels.charCodeAt(v);
+                const newCount = (vChar === lastChar) ? count + 1 : 1;
 
-                if (nxtCount <= k) {
-                    const nxtW = w + weight;
-                    const nxtStateKey = `${v},${nxtChar},${nxtCount}`;
-                    if (!dist.has(nxtStateKey) || nxtW < dist.get(nxtStateKey)) {
-                        dist.set(nxtStateKey, nxtW);
-                        pq.enqueue([nxtW, v, nxtChar, nxtCount]);
+                if (newCount <= k) {
+                    const newDist = d + weight;
+                    const nextKey = getStateKey(v, vChar, newCount);
+                    if (newDist < (dist.get(nextKey) ?? Infinity)) {
+                        dist.set(nextKey, newDist);
+                        pq.enqueue([newDist, v, vChar, newCount]);
                     }
                 }
             }
