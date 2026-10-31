@@ -4,9 +4,9 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 
-[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=Oc1buJEw5Bk)
+[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=TrW_QgmLzTE)
 
-👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=Oc1buJEw5Bk)**
+👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=TrW_QgmLzTE)**
 
 📂 **YouTube Playlist:** [Medium LeetCode Problems Playlist](https://www.youtube.com/playlist?list=PLDwpLRpPSYZI)
 
@@ -96,9 +96,9 @@ modulo
 Note
 : If a reflection moves the robot into a mirror cell, the robot is immediately reflected again based on the direction it used to enter that mirror: if it entered while moving right, it will be turned down; if it entered while moving down, it will be turned right. This process will continue until either the last cell is reached, the robot moves out of bounds or the robot moves to a non-mirror cell.
 
-## 💡 Approach: Dynamic Programming with Mirror-Aware Transitions
+## 💡 Approach: Dynamic Programming with Mirror Reflection Simulation
 
-We use dynamic programming to count the number of ways to reach each cell (r, c) coming from the top or coming from the left. Since mirrors reflect incoming moves, attempting to move right into a mirror (r, c+1) where grid[r][c+1] == 1 actually redirects the robot to (r+1, c+1). Similarly, attempting to move down into a mirror (r+1, c) redirects the robot to (r+1, c+1). We can precompute or dynamically resolve these cascade reflections because multiple consecutive mirrors might cause an infinite loop or multiple bounces, which we resolve by tracing the landing cell. If the landing cell goes out of bounds, the path is invalid.
+The problem asks for the number of paths from (0, 0) to (m - 1, n - 1) in a grid containing mirrors (1) and empty spaces (0). Moving right or down into a mirror redirects the robot: moving right into a mirror sends it down to the cell below, and moving down into a mirror sends it right to the cell to the right. This chain reaction can continue if the new cell is also a mirror. We can use dynamic programming where dp[i][j] represents the number of valid ways to reach cell (i, j). To compute dp[i][j], we sum the ways coming from the top and from the left. For a transition from the cell above (i-1, j) going down, if (i, j) is a mirror, it reflects the robot to the right (i, j+1). For a transition from the left (i, j-1) going right, if (i, j) is a mirror, it reflects the robot down (i+1, j). We simulate the reflection chain recursively or iteratively to find the final landing cell and add the path count modulo 10^9 + 7.
 
 ## ⏱️ Complexity
 
