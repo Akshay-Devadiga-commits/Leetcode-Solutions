@@ -4,9 +4,9 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 
-[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=JsPVVUE9b7E)
+[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=c6DJFb4Ax1M)
 
-👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=JsPVVUE9b7E)**
+👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=c6DJFb4Ax1M)**
 
 📂 **YouTube Playlist:** [Medium LeetCode Problems Playlist](https://www.youtube.com/playlist?list=PLDwpLRpPSYZI)
 
