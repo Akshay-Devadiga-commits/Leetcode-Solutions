@@ -4,9 +4,9 @@
 
 ### 📺 Video Walkthrough & Visual Execution
 
-[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=O4wZcValuRk)
+[![Video Walkthrough & Visual Execution](thumbnail.png)](https://www.youtube.com/watch?v=ICsuqeFwDwg)
 
-👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=O4wZcValuRk)**
+👉 **[Watch the complete step-by-step visual explanation on YouTube](https://www.youtube.com/watch?v=ICsuqeFwDwg)**
 
 📂 **YouTube Playlist:** [Medium LeetCode Problems Playlist](https://www.youtube.com/playlist?list=PLDwpLRpPSYZI)
 
@@ -74,7 +74,9 @@ n
 
 ## 💡 Approach: Dynamic Programming
 
-We can solve this problem using Dynamic Programming. Let `dp[i]` represent the minimum cost to reach step `i`. Starting at step 0 with `dp[0] = 0`, to reach any step `i` (for `1 <= i <= n`), the previous step `j` must be one of `i - 1`, `i - 2`, or `i - 3` (provided `j >= 0`). The cost of jumping from `j` to `i` is `costs[i - 1] + (i - j)^2`. Therefore, the recurrence relation is `dp[i] = costs[i - 1] + min(dp[i - 1] + 1, dp[i - 2] + 4, dp[i - 3] + 9)` (checking bounds for `i - 2` and `i - 3`). Computing this iteratively from `1` to `n` takes linear time $O(n)$ and guarantees the global optimal solution.
+This problem can be solved using dynamic programming. We want to find the minimum cost to reach each step from step 0 up to step n. Let dp[i] be the minimum cost to reach step i. We start at step 0 with a cost of 0. To reach step i, we could have come from step i-1, i-2, or i-3. The cost to reach step i from step j (where j < i) is dp[j] + costs[i] + (i - j)^2. We need to consider all possible previous steps (i-1, i-2, i-3) and take the minimum cost. The base cases are: dp[0] = 0. For i > 0, dp[i] = min(dp[i-1] + costs[i] + (i-1)^2, dp[i-2] + costs[i] + (i-2)^2, dp[i-3] + costs[i] + (i-3)^2), where we only consider valid previous steps (i.e., i-k >= 0). The final answer will be dp[n].
+
+The constraints on n (up to 10) are very small, which suggests that even a slightly less optimal DP approach would pass. However, the DP approach is the standard and most efficient way to solve this type of problem. The key insight is that the minimum cost to reach a step depends only on the minimum costs to reach the preceding few steps, forming a clear recursive structure suitable for DP.
 
 ## ⏱️ Complexity
 
