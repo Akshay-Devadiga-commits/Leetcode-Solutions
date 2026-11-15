@@ -1,23 +1,23 @@
 class Solution:
-    def numOfSubarrays(self, arr: list[int]) -> int:
+    def numOfSubarrays(self, arr: List[int]) -> int:
         MOD = 10**9 + 7
+        count = prefix_sum = 0
+        # even_count starts as 1 since the initial sum (0) is even
         odd_count = 0
-        even_count = 1  # Represents the prefix sum of 0 before the array starts
-        current_sum_parity = 0
-        total_odd_subarrays = 0
+        even_count = 1
 
         for num in arr:
-            # Update current sum parity
-            # If num is odd, parity flips. If num is even, parity stays the same.
-            current_sum_parity = (current_sum_parity + num) % 2
-
-            if current_sum_parity == 1:  # Current prefix sum is odd
-                # We need previous prefix sums that were even to make the subarray sum odd
-                total_odd_subarrays = (total_odd_subarrays + even_count) % MOD
-                odd_count += 1
-            else:  # Current prefix sum is even
-                # We need previous prefix sums that were odd to make the subarray sum odd
-                total_odd_subarrays = (total_odd_subarrays + odd_count) % MOD
+            prefix_sum += num
+            # If current prefix sum is even, add the number of odd subarrays
+            if prefix_sum % 2 == 0:
+                count += odd_count
                 even_count += 1
-        
-        return total_odd_subarrays
+            else:
+                # If current prefix sum is odd, add the number of even
+                # subarrays
+                count += even_count
+                odd_count += 1
+
+            count %= MOD  # To handle large results
+
+        return count
