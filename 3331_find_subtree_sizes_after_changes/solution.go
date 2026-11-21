@@ -1,3 +1,5 @@
+package main
+
 type Solution struct {}
 
 func (s *Solution) FindSubtreeSizes(parent []int, str string) []int {
@@ -25,6 +27,7 @@ func (s *Solution) FindSubtreeSizes(parent []int, str string) []int {
 	return ans
 }
 
+// Returns the closest ancestor of node `u` that has the same value as `u`.
 func (s *Solution) findClosestAncestor(u int, parent []int, str string) int {
 	curr := parent[u]
 	for curr != -1 {
