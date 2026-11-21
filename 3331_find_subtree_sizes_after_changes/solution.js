@@ -2,11 +2,11 @@ class Solution {
   findSubtreeSizes(parent, s) {
     const n = parent.length;
     const ans = new Array(n).fill(0);
-    const newParent = parent.slice();
+    const newParent = [...parent];
     const tree = Array.from({ length: n }, () => []);
 
     for (let i = 1; i < n; ++i) {
-      const closest = this._findClosestAncestor(i, parent, s);
+      const closest = this.findClosestAncestor(i, parent, s);
       if (closest !== -1) {
         newParent[i] = closest;
       }
@@ -16,11 +16,12 @@ class Solution {
       tree[newParent[i]].push(i);
     }
 
-    this._dfs(tree, 0, ans);
+    this.dfs(tree, 0, ans);
     return ans;
   }
 
-  _findClosestAncestor(u, parent, s) {
+  // Returns the closest ancestor of node `u` that has the same value as `u`.
+  findClosestAncestor(u, parent, s) {
     let curr = parent[u];
     while (curr !== -1) {
       if (s[curr] === s[u]) {
@@ -31,10 +32,10 @@ class Solution {
     return -1;
   }
 
-  _dfs(tree, u, ans) {
+  dfs(tree, u, ans) {
     let sz = 1;
     for (const v of tree[u]) {
-      sz += this._dfs(tree, v, ans);
+      sz += this.dfs(tree, v, ans);
     }
     ans[u] = sz;
     return sz;
